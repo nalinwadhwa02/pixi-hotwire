@@ -1,0 +1,97 @@
+// First, set up the canvas and create a new Pixi.Application
+const app = new PIXI.Application({
+  width: 800,
+  height: 600,
+});
+document.body.appendChild(app.view);
+
+// Connect to the Socket.io server
+const socket = io();
+
+// Set up the player character and add it to the stage
+let player;
+
+// Set up the game loop
+app.ticker.add((delta) => {
+  // Update the player's position and velocity
+  player.x += player.vx;
+  player.y += player.vy;
+
+  // Send updates to the server
+  socket.emit("update", {
+    x: player.x,
+    y: player.y,
+  });
+});
+
+// Handle updates from the server
+socket.on("update", (data) => {
+  // Update the positions of other players
+  for (const id in data.players) {
+    if (id === socket.id) {
+      continue;
+    }
+    const otherPlayer = data.players[id];
+    if (otherPlayer.sprite) {
+      otherPlayer.sprite.x = otherPlayer.x;
+      otherPlayer.sprite.y = otherPlayer.y;
+    } else {
+      otherPlayer.sprite = new PIXI.Sprite(PIXI.Texture.from("player.png"));
+      otherPlayer.sprite.x = otherPlayer.x;
+      otherPlayer.sprite.y = otherPlayer.y;
+      app.stage.addChild(otherPlayer.sprite);
+    }
+  }
+});
+
+// Set up keyboard controls
+const left = keyboard("ArrowLeft");
+const right = keyboard("ArrowRight");
+const up = keyboard("ArrowUp");
+const down = keyboard("ArrowDown");
+
+left.press = () => {
+  player.vx = -5;
+};
+left.release = () => {
+  if (!right.isDown) {
+    player.vx = 0;
+  }
+};
+right.press = () => {
+  player.vx = 5;
+};
+right.release = () => {
+  if (!left.isDown) {
+    player.vx = 0;
+  }
+};
+up.press = () => {
+  player.vy = -5;
+};
+up.release = () => {
+  if (!down.isDown) {
+    player.vy = 0;
+  }
+};
+down.press = () => {
+  player.vy = 5;
+};
+down.release = () => {
+  if (!up.isDown) {
+    player.vy = 0;
+  }
+};
+
+// Keyboard utility function
+function keyboard(keyCode) {
+  const key = {};
+  key.code = keyCode;
+  key.isDown = false;
+  key.isUp = true;
+  key.press = undefined;
+  key.release = undefined;
+  // The `downHandler`
+  key.downHandler = (event) => {
+    if (event.code === key.code) {
+      if (key.isUp && key.press) key.press
