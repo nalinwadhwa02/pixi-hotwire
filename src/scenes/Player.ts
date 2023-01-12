@@ -1,3 +1,5 @@
+// import { Layer } from "@pixi/layers";
+import { Sound } from "@pixi/sound";
 import { Container, Sprite } from "pixi.js";
 import { IScene } from "../Manager";
 import { gameconstants } from "../utils/constants";
@@ -22,6 +24,7 @@ export class Player extends Container implements IScene {
     // private spritestates: SpriteStates;
     private state: PlayerStates;
     private ToGoTo: Vector2;
+    private movingsound: Sound
     constructor() {
         super();
         this.state = PlayerStates.idle;
@@ -33,7 +36,19 @@ export class Player extends Container implements IScene {
         this.sprite.x = 0;
         this.sprite.y = 0;
         this.ToGoTo = {x:0, y:0};
+        this.movingsound = Sound.from("./spaceshipmove_smaller.wav")
+        this.movingsound.volume = 0.5
+        this.movingsound.loop = false;
         this.addChild(this.sprite);
+
+        // const layer = new Layer();
+        // layer.useRenderTexture = true;
+        // layer.useDoubleBuffer = true;
+        // const trailsprite = new Sprite(layer.getRenderTexture());
+        // trailsprite.alpha = 0.6;
+        // layer.addChild(trailsprite);
+        // this.addChild(layer);
+        
     }
     public update(framesPassed: number): void {
         if (this.state == PlayerStates.moving){
@@ -43,6 +58,7 @@ export class Player extends Container implements IScene {
                 this.x = this.ToGoTo.x;
                 this.y = this.ToGoTo.y;
                 this.state = PlayerStates.idle;
+                this.movingsound.stop();
             }
             else{
                 // console.log("dist left:", dist , framesPassed, getLen(ToGoToDir));
@@ -60,6 +76,7 @@ export class Player extends Container implements IScene {
     }
     public moveTo(location: Vector2){
         if(this.state == PlayerStates.idle || this.state == PlayerStates.moving){
+            this.movingsound.play()
             // console.log("player moving to ", location)
             this.ToGoTo = location;
             this.state = PlayerStates.moving;

@@ -1,7 +1,7 @@
 import { Container, Graphics, Loader } from "pixi.js";
 import { assets } from "../assets";
 import { IScene, Manager } from "../Manager";
-import { GameScene } from "./GameScene";
+import { ConnectWalletScene } from "./WalletLinkScene";
 
 export class LoaderScene extends Container implements IScene {
 
@@ -46,7 +46,7 @@ export class LoaderScene extends Container implements IScene {
 
     private gameLoaded(): void {
         // Change scene to the game scene!
-        Manager.changeScene(new GameScene());
+        Manager.changeScene(new ConnectWalletScene());
     }
 
     public update(framesPassed: number): void {

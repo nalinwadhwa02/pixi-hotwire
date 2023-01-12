@@ -24,9 +24,9 @@ export class UI extends Container implements IScene {
             fontFamily : "Comic Sans MS",
             align: "right",
             fill: 0xffffff,
-            fontSize: 30,
+            fontSize: 20,
         })
-        this.addr = new Text(address, style);
+        this.addr = new Text(address.substring(0,10) + "...", style);
         this.addChild(this.addr);
         this.playername = new Text(name, style);
         this.addChild(this.playername);
@@ -64,15 +64,15 @@ export class UI extends Container implements IScene {
 
         let obj3 = new Graphics();
         obj3.beginFill(0x6666bb);
-        obj3.drawRoundedRect(uix - 320, uiy - 40, 370, 80, 10);
+        obj3.drawRoundedRect(uix - 190, uiy - 30, 200, 60, 10);
         obj3.zIndex = 1
         this.boxes.addChild(obj3);
 
-        this.addr.x = uix - 300
-        this.addr.y = uiy  
+        this.addr.x = uix - 180
+        this.addr.y = uiy - 3
 
-        this.playername.x = uix - 300
-        this.playername.y = uiy - 40
+        this.playername.x = uix - 180
+        this.playername.y = uiy - 30
 
 
 
