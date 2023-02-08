@@ -1,0 +1,82 @@
+// First, set up the canvas and create a new Pixi.Application
+const app = new PIXI.Application({
+  width: 800,
+  height: 600,
+});
+document.body.appendChild(app.view);
+
+// Load the sprite sheet containing the player character and platform tiles
+PIXI.Loader.shared.add("sprites", "sprites.json").load((loader, resources) => {
+  // Create the player character and add it to the stage
+  const player = new PIXI.Sprite(resources.sprites.textures["player.png"]);
+  player.x = 100;
+  player.y = 100;
+  app.stage.addChild(player);
+
+  // Create the platform tiles and add them to the stage
+  const platforms = [    new PIXI.Sprite(resources.sprites.textures["platform.png"]),
+    new PIXI.Sprite(resources.sprites.textures["platform.png"]),
+  ];
+  platforms[0].x = 200;
+  platforms[0].y = 300;
+  platforms[1].x = 600;
+  platforms[1].y = 400;
+  app.stage.addChild(platforms[0]);
+  app.stage.addChild(platforms[1]);
+
+  // Set up the player's movement and physics
+  let playerVelocityY = 0;
+  const playerGravity = 0.5;
+  const playerJumpSpeed = -8;
+  let playerOnGround = false;
+
+  // Set up keyboard controls
+  const left = keyboard("ArrowLeft");
+  const right = keyboard("ArrowRight");
+  const space = keyboard(" ");
+
+  left.press = () => {
+    player.vx = -5;
+  };
+  left.release = () => {
+    if (!right.isDown) {
+      player.vx = 0;
+    }
+  };
+  right.press = () => {
+    player.vx = 5;
+  };
+  right.release = () => {
+    if (!left.isDown) {
+      player.vx = 0;
+    }
+  };
+  space.press = () => {
+    if (playerOnGround) {
+      playerVelocityY = playerJumpSpeed;
+      playerOnGround = false;
+    }
+  };
+
+  // Set up the game loop
+  app.ticker.add((delta) => {
+    // Update the player's position and velocity
+    player.x += player.vx;
+    player.y += playerVelocityY;
+    playerVelocityY += playerGravity;
+
+    // Check for collision with platforms
+    playerOnGround = false;
+    for (const platform of platforms) {
+      if (player.y + player.height > platform.y && player.y < platform.y + platform.height && player.x + player.width > platform.x && player.x < platform.x + platform.width) {
+        player.y = platform.y - player.height;
+        playerVelocityY = 0;
+        playerOnGround = true;
+        break;
+      }
+    }
+  });
+});
+
+// Keyboard utility function
+function keyboard(keyCode) {

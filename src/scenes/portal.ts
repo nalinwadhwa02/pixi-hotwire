@@ -5,7 +5,8 @@ export interface portalpos {
     x: number,
     y: number,
     w: number,
-    h: number
+    h: number,
+    icon: string
 }
 
 export class Portal extends Container implements IScene {
@@ -22,7 +23,7 @@ export class Portal extends Container implements IScene {
         this.portalbox.beginFill(0x6666bb);
         this.portalbox.drawRoundedRect(pp.x, pp.y, pp.w, pp.h, 20);
         this.portalbox.zIndex = 1;
-        this.portalicon = Sprite.from("portalicon");
+        this.portalicon = Sprite.from(pp.icon);
         this.portalicon.x = pp.x ;
         this.portalicon.y = pp.y ;
         this.portalicon.width = pp.w ;

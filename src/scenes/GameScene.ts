@@ -19,6 +19,8 @@ export class GameScene extends Container implements IScene {
     private transparentSp: Sprite
     private fo_portal: Portal
     private pp: portalpos
+    // private NFTStore_portal: Portal
+    // private NFTStore_pp: portalpos
     private music: Sound 
     public paused: boolean
     private GameBG: Container
@@ -48,12 +50,18 @@ export class GameScene extends Container implements IScene {
         this.ui.zIndex = 3;
         this.addChild(this.ui);
 
-        this.pp = {x: 1150, y: 550, w: 100, h: 100}
+        this.pp = {x: Manager.width - 300, y: Manager.height - 200, w: 100, h: 100, icon: "portalicon"}
         this.fo_portal = new Portal(this.pp);
         this.fo_portal.zIndex = 1;
         this.addChild(this.fo_portal);
 
-        this.music = Sound.from("./bgmusic.mp3")
+
+        // this.NFTStore_pp = {x: 200, y: 400, w: 100, h: 100, icon: "portalicon"}
+        // this.NFTStore_portal = new Portal(this.NFTStore_pp);
+        // this.NFTStore_portal.zIndex = 1;
+        // this.addChild(this.NFTStore_portal);
+
+        this.music = Sound.from("./prev_assets/bgmusic.mp3")
         this.music.volume = 0.3
         this.music.loop = true;
         this.music.play()
@@ -77,6 +85,7 @@ export class GameScene extends Container implements IScene {
         this.on("pointertap", this.pointertap, this);
         // this.on("pointermove", this.pointerhover, this);
         this.interactive = true;
+        // fetch("http://localhost:9999/", {method: 'PUT', body: 'playerlogin'}).then(r => console.log(r))
 
     }
     public update(framesPassed: number): void {

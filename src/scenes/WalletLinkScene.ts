@@ -40,13 +40,14 @@ export class ConnectWalletScene extends Container implements IScene {
     }
 
     private moveScene(result : Profile | Error){
-        console.log(result);
+        // console.log(result);
         if (result instanceof Error){
             alert("You need to install Keplr Wallet Extension to access this site")
         }
         else{
             let textinput = document.getElementById("playername-textbox");
             textinput?.remove();
+            
             Manager.changeScene(new GameScene(result));
         }
 

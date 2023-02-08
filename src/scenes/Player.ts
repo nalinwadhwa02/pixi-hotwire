@@ -36,8 +36,8 @@ export class Player extends Container implements IScene {
         this.sprite.x = 0;
         this.sprite.y = 0;
         this.ToGoTo = {x:0, y:0};
-        this.movingsound = Sound.from("./spaceshipmove_smaller.wav")
-        this.movingsound.volume = 0.5
+        this.movingsound = Sound.from("./prev_assets/spaceshipmove_smaller.wav")
+        this.movingsound.volume = 0.1
         this.movingsound.loop = false;
         this.addChild(this.sprite);
 
